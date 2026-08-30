@@ -22,4 +22,21 @@
 #ifndef _STRVIEW_H_
 #define _STRVIEW_H_
 
+#include <string.h>
+
+/**
+ * Main data structure representing string of chars.
+ * String view does not allocate memory to build string,
+ * but it is a pointer to existing char* in memory.
+ */
+typedef struct {
+    const char *str;
+    size_t len;
+} strview_t;
+
+strview_t sv_from_cstr(const char *s);
+strview_t sv_from_cstr_len(const char *s, size_t len);
+size_t sv_len(strview_t sv);
+int sv_empty(strview_t sv);
+
 #endif

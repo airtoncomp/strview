@@ -20,3 +20,51 @@
  */
 
 #include "strview.h"
+
+#ifdef DEBUG
+
+#define SV_LOG(...) do {                                                \
+            fprintf(stdout, "[DEBUG] %s:%d: ", __FILE__, __LINE__);     \
+            fprintf(stdout, __VA_ARGS__);                               \
+        } while(0)
+
+#define SV_LOGE(...) do {                                               \
+            fprintf(stderr, "[DEBUG] %s:%d: ", __FILE__, __LINE__);     \
+            fprintf(stderr, __VA_ARGS__);                               \
+        } while(0)
+
+#else
+
+#define SV_LOG(stdout, ...)                 ((void)0)
+#define SV_LOGE(stderr, ...)                ((void)0)
+
+#endif
+
+#define SV_RET_ON_ERR(x, fmt, ...) do {                     \
+            if (x < 0) {                                    \
+                fprintf(stderr, fmt"\n", ##__VA_ARGS__);    \
+                return -1;                                  \
+            }                                               \
+        } while(0)
+
+strview_t sv_from_cstr(const char *s)
+{
+    strview_t sv = { .str = s, .len = s ? strlen(s) : 0 };
+    return sv;
+}
+
+strview_t sv_from_cstr_len(const char *s, size_t len)
+{
+    strview_t sv = { .str = s, .len = len };
+    return sv;
+}
+
+inline size_t sv_len(strview_t sv)
+{
+    return sv.len;
+}
+
+inline int sv_empty(strview_t sv)
+{
+    return sv.len > 0;
+}
