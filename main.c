@@ -99,5 +99,25 @@ int main()
     sv_rfind_char(sv8, 'c', &pos);
     printf("found %c at %zu (reverse find)\n", c, pos);
 
+    printf("\n");
+
+    strview_t sv9 = sv_from_cstr("test-case");
+    const char *str = "case";
+    sv_find_cstr(sv9, str, &pos);
+    printf("found word %s at %zu\n", str, pos);
+
+    printf("\n");
+
+    strview_t sv10 = sv_from_cstr("hello-world");
+    strview_t sv11 = sv_from_cstr("ld");
+    printf("it starts with prefix (0 = yes, -1 = no): %d\n", sv_starts_with(sv10, sv11));
+    printf("it ends with suffix (0 = yes, -1 = no): %d\n", sv_ends_with(sv10, sv11));
+
+    printf("\n");
+
+    strview_t sv12 = sv_from_cstr("this is my library");
+    strview_t sv13 = sv_from_cstr("is");
+    printf("it contains (0 = yes, -1 = no): %d\n", sv_contains(sv12, sv13));
+
     return 0;
 }
