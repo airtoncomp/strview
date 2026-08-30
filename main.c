@@ -77,5 +77,27 @@ int main()
     printf("string that was removed: ");
     sv_println_safe_stdout(save_rem_suffix);
 
+    printf("\n");
+
+    strview_t sv6 = sv_from_cstr("abcd");
+    strview_t sv7 = sv_from_cstr("abcd");
+    printf("compare string (0 = equal, positive = left > right, negative = otherwise): ");
+    printf("%d\n", sv_cmp(sv6, sv7));
+    sv_rem_prefix(&sv7, 2);
+    printf("compare string (0 = equal, positive = left > right, negative = otherwise): ");
+    printf("%d\n", sv_cmp(sv6, sv7));
+
+    printf("\n");
+
+    strview_t sv8 = sv_from_cstr("abcdec");
+    char c = 'c';
+    size_t pos;
+    sv_find_char(sv8, 'c', &pos);
+    printf("first occurrence of char in string: ");
+    sv_println_safe_stdout(sv8);
+    printf("found %c at %zu\n", c, pos);
+    sv_rfind_char(sv8, 'c', &pos);
+    printf("found %c at %zu (reverse find)\n", c, pos);
+
     return 0;
 }
