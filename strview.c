@@ -130,11 +130,33 @@ int sv_rem_prefix(strview_t *sv, size_t end_pos)
     return 0;
 }
 
+int sv_rem_prefix_save(strview_t *sv, size_t end_pos, strview_t *save)
+{
+    SV_RET_ERR_ON_NULL(save, "null pointer");
+    SV_RET_ERR_ON_NULL(sv->data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(end_pos > sv->len, "invalid prefix ending position");
+    save->data = sv->data;
+    save->len = end_pos + 1;
+    sv->data = sv->data + end_pos + 1;
+    sv->len = sv->len - end_pos;
+    return 0;
+}
+
 int sv_rem_suffix(strview_t *sv, size_t start_pos)
 {
     SV_RET_ERR_ON_NULL(sv->data, "string view *data points to null");
     SV_RET_ERR_ON_TRUE(start_pos > sv->len, "invalid suffix starting position");
-    sv->data = sv->data;
+    sv->len = start_pos;
+    return 0;
+}
+
+int sv_rem_suffix_save(strview_t *sv, size_t start_pos, strview_t *save)
+{
+    SV_RET_ERR_ON_NULL(save, "null pointer");
+    SV_RET_ERR_ON_NULL(sv->data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(start_pos > sv->len, "invalid suffix starting position");
+    save->data = sv->data + start_pos;
+    save->len = sv->len - start_pos;
     sv->len = start_pos;
     return 0;
 }

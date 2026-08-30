@@ -48,6 +48,8 @@ int sv_suffix(strview_t sv, size_t start_pos, strview_t *out);
 
 int sv_rem_prefix(strview_t *sv, size_t end_pos);
 int sv_rem_suffix(strview_t *sv, size_t start_pos);
+int sv_rem_prefix_save(strview_t *sv, size_t end_pos, strview_t *save);
+int sv_rem_suffix_save(strview_t *sv, size_t start_pos, strview_t *save);
 
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);
