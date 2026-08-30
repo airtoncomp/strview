@@ -192,8 +192,22 @@ int sv_rfind_char(strview_t sv, char c, size_t *pos)
             return 0;
         }
     }
-
     return -1;
+}
+
+int sv_find_cstr(strview_t sv, const char *str, size_t *pos)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_NULL(pos, "argument is null pointer");
+    SV_RET_ERR_ON_NULL(str, "c string is null pointer");
+    
+    char *match = strstr(sv.data, str);
+    if (!match) {
+        SV_LOG("There is no matching substring");
+        return -1;
+    } 
+    sv_find_char(sv, match[0], pos);
+    return 0;
 }
 
 inline void sv_print_safe_stdout(strview_t sv)
