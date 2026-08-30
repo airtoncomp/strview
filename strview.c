@@ -206,7 +206,41 @@ int sv_find_cstr(strview_t sv, const char *str, size_t *pos)
         SV_LOG("There is no matching substring");
         return -1;
     } 
-    sv_find_char(sv, match[0], pos);
+    return sv_find_char(sv, match[0], pos);
+}
+
+int sv_starts_with(strview_t sv, strview_t prefix)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_NULL(prefix.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(prefix.len > sv.len, "prefix string length is too long");
+
+    for (size_t i = 0; i < prefix.len; i++) 
+            if (*(sv.data + i) != *(prefix.data + i))
+                return -1;
+    return 0;
+}
+
+int sv_ends_with(strview_t sv, strview_t suffix)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_NULL(suffix.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(suffix.len > sv.len, "suffix string length is too long");
+
+    for (size_t i = suffix.len, j = 0; i > 0; i--, j++) 
+            if (*(sv.data + sv.len - j) != *(suffix.data + i))
+                return -1;
+    return 0;
+}
+
+int sv_contains(strview_t sv, strview_t needle)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_NULL(needle.data, "string view *data points to null");
+
+    char *s = strstr(sv.data, needle.data);
+    if (!s)
+        return -1;
     return 0;
 }
 

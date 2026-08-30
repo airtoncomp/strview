@@ -57,6 +57,10 @@ int sv_find_char(strview_t sv, char c, size_t *pos);
 int sv_rfind_char(strview_t sv, char c, size_t *pos);
 int sv_find_cstr(strview_t sv, const char *str, size_t *pos);
 
+int sv_starts_with(strview_t sv, strview_t prefix);
+int sv_ends_with(strview_t sv, strview_t suffix);
+int sv_contains(strview_t sv, strview_t needle);
+
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);
 
