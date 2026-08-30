@@ -53,5 +53,29 @@ int main()
     sv_rem_suffix(&sv3, 7);
     sv_println_safe_stdout(sv3);
 
+    printf("\n");
+
+    strview_t save_rem_prefix;
+    strview_t sv4 = sv_from_cstr("abcdefghij");
+    printf("original string: ");
+    sv_println_safe_stdout(sv4);
+    printf("string after removing prefix: ");
+    sv_rem_prefix_save(&sv4, 4, &save_rem_prefix);
+    sv_println_safe_stdout(sv4);
+    printf("string that was removed: ");
+    sv_println_safe_stdout(save_rem_prefix);
+
+    printf("\n");
+
+    strview_t save_rem_suffix;
+    strview_t sv5 = sv_from_cstr("abcdefghij");
+    printf("original string: ");
+    sv_println_safe_stdout(sv5);
+    printf("string after removing suffix: ");
+    sv_rem_suffix_save(&sv5, 7, &save_rem_suffix);
+    sv_println_safe_stdout(sv5);
+    printf("string that was removed: ");
+    sv_println_safe_stdout(save_rem_suffix);
+
     return 0;
 }
