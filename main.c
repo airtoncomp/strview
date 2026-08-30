@@ -5,11 +5,11 @@
 
 int main() 
 {
-    strview_t sv = sv_from_cstr("test string");
+    strview_t sv = sv_from_cstr("test-string");
 
     printf("string: %s\n", sv.data);
     printf("len: %zu\n", sv_len(sv));
-    printf("is empty: %d\n", sv_empty(sv));
+    printf("is empty (0 if empty): %d\n", sv_empty(sv));
 
     char buf1[256];
     sv_to_cstr(sv, buf1, 256);
@@ -28,10 +28,30 @@ int main()
     printf("to cstr: %s\n", buf2);
 
     strview_t suffix, prefix;
-    sv_prefix(sv, 4, &prefix);
+    sv_prefix(sv, 3, &prefix);
     sv_suffix(sv, 5, &suffix);
+    printf("string prefix: ");
     sv_println_safe_stdout(prefix);
+    printf("string suffix: ");
     sv_println_safe_stdout(suffix);
+
+    printf("\n");
+
+    strview_t sv2 = sv_from_cstr("abcdefghij");
+    printf("original string: ");
+    sv_println_safe_stdout(sv2);
+    printf("string after removing prefix: ");
+    sv_rem_prefix(&sv2, 4);
+    sv_println_safe_stdout(sv2);
+
+    printf("\n");
+
+    strview_t sv3 = sv_from_cstr("abcdefghij");
+    printf("original string: ");
+    sv_println_safe_stdout(sv3);
+    printf("string after removing suffix: ");
+    sv_rem_suffix(&sv3, 7);
+    sv_println_safe_stdout(sv3);
 
     return 0;
 }
