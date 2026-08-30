@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "strview.h"
 
@@ -126,6 +127,28 @@ int main()
     char buf[buflen];
     sv_trim(sv14, buf, buflen);
     printf("trimmed: %s\n", buf);
+
+    printf("\n");
+
+    strview_t sv15 = sv_from_cstr("+123313409090");
+    strview_t sv16 = sv_from_cstr("-9892321");
+    uint64_t n64_u;
+    int64_t n64;
+    sv_to_u64(sv15, &n64_u);
+    printf("string to u64: %ld\n", n64_u);
+    sv_to_i64(sv16, &n64);
+    printf("string to i64: %ld\n", n64);
+
+    printf("\n");
+
+    strview_t sv17 = sv_from_cstr("+778");
+    strview_t sv18 = sv_from_cstr("-5436");
+    uint32_t n32_u;
+    int32_t n32;
+    sv_to_u32(sv17, &n32_u);
+    printf("string to u32: %d\n", n32_u);
+    sv_to_i32(sv18, &n32);
+    printf("string to i32: %d\n", n32);
 
     return 0;
 }
