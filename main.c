@@ -119,5 +119,13 @@ int main()
     strview_t sv13 = sv_from_cstr("is");
     printf("it contains (0 = yes, -1 = no): %d\n", sv_contains(sv12, sv13));
 
+    printf("\n");
+
+    strview_t sv14 = sv_from_cstr("string to be trimmed");
+    size_t buflen = 256;
+    char buf[buflen];
+    sv_trim(sv14, buf, buflen);
+    printf("trimmed: %s\n", buf);
+
     return 0;
 }
