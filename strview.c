@@ -161,12 +161,55 @@ int sv_rem_suffix_save(strview_t *sv, size_t start_pos, strview_t *save)
     return 0;
 }
 
+int sv_cmp(strview_t a, strview_t b)
+{
+    return strcmp(a.data, b.data);
+}
+
+int sv_find_char(strview_t sv, char c, size_t *pos)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_NULL(pos, "argument is null pointer");
+
+    for (size_t i = 0; i < sv.len; i++) {
+        if (*(sv.data + i) == c) {
+            *pos = i;
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+int sv_rfind_char(strview_t sv, char c, size_t *pos)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_NULL(pos, "argument is null pointer");
+
+    for (size_t i = sv.len - 1; i > 0; i--) {
+        if (*(sv.data + i) == c) {
+            *pos = i;
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
 inline void sv_print_safe_stdout(strview_t sv)
 {
+    if (!sv.data) {
+        SV_LOGE("String view *data is null pointer");
+        return;
+    }
     printf("%.*s", (int) sv.len, sv.data);
 }
 
 inline void sv_println_safe_stdout(strview_t sv)
 {
+    if (!sv.data) {
+        SV_LOGE("String view *data is null pointer");
+        return;
+    }
     printf("%.*s\n", (int) sv.len, sv.data);
 }

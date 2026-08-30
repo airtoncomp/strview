@@ -51,6 +51,11 @@ int sv_rem_suffix(strview_t *sv, size_t start_pos);
 int sv_rem_prefix_save(strview_t *sv, size_t end_pos, strview_t *save);
 int sv_rem_suffix_save(strview_t *sv, size_t start_pos, strview_t *save);
 
+int sv_cmp(strview_t a, strview_t b);
+
+int sv_find_char(strview_t sv, char c, size_t *pos);
+int sv_rfind_char(strview_t sv, char c, size_t *pos);
+
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);
 
