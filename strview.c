@@ -244,6 +244,23 @@ int sv_contains(strview_t sv, strview_t needle)
     return 0;
 }
 
+int sv_trim(strview_t sv, char *buf, size_t buflen)
+{
+    SV_RET_ERR_ON_NULL(buf, "buffer is null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(buflen < sv.len, "insufficient buffer room");
+
+    size_t j = 0;
+    for (size_t i = 0; i < sv.len; i++) {
+        if (*(sv.data + i) == ' ') 
+            continue;
+        buf[j++] = *(sv.data + i);
+    }
+    buf[j] = '\0';
+
+    return 0;
+}
+
 inline void sv_print_safe_stdout(strview_t sv)
 {
     if (!sv.data) {

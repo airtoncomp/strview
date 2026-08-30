@@ -61,6 +61,8 @@ int sv_starts_with(strview_t sv, strview_t prefix);
 int sv_ends_with(strview_t sv, strview_t suffix);
 int sv_contains(strview_t sv, strview_t needle);
 
+int sv_trim(strview_t sv, char *buf, size_t buflen);
+
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);
 
