@@ -43,6 +43,8 @@ size_t sv_len(strview_t sv);
 int sv_empty(strview_t sv);
 
 int sv_substr(strview_t sv, size_t pos, size_t len, strview_t *out);
+int sv_prefix(strview_t sv, size_t end_pos, strview_t *out);
+int sv_suffix(strview_t sv, size_t start_pos, strview_t *out);
 
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);
