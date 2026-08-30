@@ -30,13 +30,21 @@
  * but it is a pointer to existing char* in memory.
  */
 typedef struct {
-    const char *str;
+    const char *data;
     size_t len;
 } strview_t;
 
 strview_t sv_from_cstr(const char *s);
 strview_t sv_from_cstr_len(const char *s, size_t len);
+
+int sv_to_cstr(strview_t sv, char *buf, size_t buflen);
+
 size_t sv_len(strview_t sv);
 int sv_empty(strview_t sv);
+
+int sv_substr(strview_t sv, size_t pos, size_t len, strview_t *out);
+
+void sv_print_safe_stdout(strview_t sv);
+void sv_println_safe_stdout(strview_t sv);
 
 #endif
