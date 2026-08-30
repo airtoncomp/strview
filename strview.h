@@ -63,6 +63,11 @@ int sv_contains(strview_t sv, strview_t needle);
 
 int sv_trim(strview_t sv, char *buf, size_t buflen);
 
+int sv_to_u64(strview_t sv, uint64_t *val);
+int sv_to_i64(strview_t sv, int64_t *val);
+int sv_to_u32(strview_t sv, uint32_t *val);
+int sv_to_i32(strview_t sv, int32_t *val);
+
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);
 

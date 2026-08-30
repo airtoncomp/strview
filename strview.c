@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "strview.h"
 
@@ -257,6 +258,145 @@ int sv_trim(strview_t sv, char *buf, size_t buflen)
         buf[j++] = *(sv.data + i);
     }
     buf[j] = '\0';
+
+    return 0;
+}
+
+int sv_to_u64(strview_t sv, uint64_t *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(sv.data[0] == '-', "invalid symbol for u64");
+
+    if (sv.data[0] == '+')
+        SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
+    
+    uint64_t res = 0, digit;
+
+    for (size_t i = 1; i < sv.len; i++) {
+        SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
+        /* *
+         * Convert an ASCII digit character into its integer digit value.
+         * '0' = 48, '9' = 57. Operate on ascii values.
+         */
+        digit = (uint64_t) (sv.data[i] - '0');
+        SV_RET_ERR_ON_TRUE((res > (UINT64_MAX - digit)/10), "invalid range");
+        res = res * 10 + digit;
+    }
+
+    *val = res;
+
+    return 0;
+}
+
+int sv_to_i64(strview_t sv, int64_t *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+
+    if (sv.data[0] == '+' || sv.data[0] == '-') {
+        SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
+    }
+
+    int is_negative = (sv.data[0] == '-');
+
+    /* *
+     * Negative range of int64_t has one more representable magnitude
+     * than the positive range.
+     * INT64_MAX =  9223372036854775807
+     * INT64_MIN = -9223372036854775808
+     */
+    uint64_t limit = is_negative ? (uint64_t) INT64_MAX + 1 : (uint64_t) INT64_MAX;
+    
+    uint64_t res = 0, digit;
+
+    for (size_t i = 1; i < sv.len; i++) {
+        SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
+        /* *
+         * Convert an ASCII digit character into its integer digit value.
+         * '0' = 48, '9' = 57. Operate on ascii values.
+         */
+        digit = (uint64_t) (sv.data[i] - '0');
+        SV_RET_ERR_ON_TRUE((res > (limit - digit)/10), "invalid range");
+        res = res * 10 + digit;
+    }
+    
+    /* Add - sign later */
+    if (is_negative) {
+        *val = (res == (uint64_t) INT64_MAX + 1) ? INT64_MIN : -(int64_t)res;
+    } else {
+        *val = (int64_t) res;
+    }
+
+    return 0;
+}
+
+
+int sv_to_u32(strview_t sv, uint32_t *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(sv.data[0] == '-', "invalid symbol for u32");
+
+    if (sv.data[0] == '+')
+        SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
+    
+    uint64_t res = 0, digit;
+
+    for (size_t i = 1; i < sv.len; i++) {
+        SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
+        /* *
+         * Convert an ASCII digit character into its integer digit value.
+         * '0' = 48, '9' = 57. Operate on ascii values.
+         */
+        digit = (uint32_t) (sv.data[i] - '0');
+        SV_RET_ERR_ON_TRUE((res > (UINT32_MAX - digit)/10), "invalid range");
+        res = res * 10 + digit;
+    }
+
+    *val = res;
+
+    return 0;
+}
+
+int sv_to_i32(strview_t sv, int32_t *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+
+    if (sv.data[0] == '+' || sv.data[0] == '-') {
+        SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
+    }
+
+    int is_negative = (sv.data[0] == '-');
+
+    /* *
+     * Negative range of int32_t has one more representable magnitude
+     * than the positive range.
+     * INT32_MAX =  2147483647
+     * INT32_MIN = -2147483648
+     */
+    uint32_t limit = is_negative ? (uint32_t) INT32_MAX + 1 : (uint32_t) INT32_MAX;
+    
+    uint32_t res = 0, digit;
+
+    for (size_t i = 1; i < sv.len; i++) {
+        SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
+        /* *
+         * Convert an ASCII digit character into its integer digit value.
+         * '0' = 48, '9' = 57. Operate on ascii values.
+         */
+        digit = (uint32_t) (sv.data[i] - '0');
+        SV_RET_ERR_ON_TRUE((res > (limit - digit)/10), "invalid range");
+        res = res * 10 + digit;
+    }
+    
+    /* Add - sign later */
+    if (is_negative) {
+        *val = (res == (uint32_t) INT32_MAX + 1) ? INT32_MIN : -(int32_t)res;
+    } else {
+        *val = (int32_t) res;
+    }
 
     return 0;
 }
