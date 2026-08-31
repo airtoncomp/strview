@@ -141,7 +141,7 @@ int main()
 
     printf("\n");
 
-    strview_t sv17 = sv_from_cstr("+778");
+    strview_t sv17 = sv_from_cstr("778");
     strview_t sv18 = sv_from_cstr("-5436");
     uint32_t n32_u;
     int32_t n32;
@@ -151,6 +151,7 @@ int main()
     printf("string to i32: %d\n", n32);
 
     printf("\n");
+
     strview_t sv19 = sv_from_cstr("+23.9876");
     strview_t sv20 = sv_from_cstr("-989.23");
     strview_t sv21 = sv_from_cstr("32e-3");
@@ -165,6 +166,17 @@ int main()
     printf("string to float: %f\n", nf);
     printf("string to double (e): %e\n", nde);
     printf("string to float (e): %e\n", nfe);
+
+    printf("\n");
+
+    strview_t sv23 = sv_from_cstr("566");
+    strview_t sv24 = sv_from_cstr("986");
+    int i;
+    long l;
+    sv_to_int(sv23, &i);
+    sv_to_long(sv24, &l);
+    printf("string to int: %d\n", i);
+    printf("string to long: %ld\n", l);
 
     return 0;
 }
