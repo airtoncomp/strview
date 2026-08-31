@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <errno.h>
+#include <limits.h>
 
 #include "strview.h"
 
@@ -269,12 +270,15 @@ int sv_to_u64(strview_t sv, uint64_t *val)
     SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
     SV_RET_ERR_ON_TRUE(sv.data[0] == '-', "invalid symbol for u64");
 
-    if (sv.data[0] == '+')
+    size_t i = 0;
+    if (sv.data[i] == '+') {
+        i++;
         SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
+    }
     
     uint64_t res = 0, digit;
 
-    for (size_t i = 1; i < sv.len; i++) {
+    for ( ; i < sv.len; i++) {
         SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
         /* *
          * Convert an ASCII digit character into its integer digit value.
@@ -295,7 +299,9 @@ int sv_to_i64(strview_t sv, int64_t *val)
     SV_RET_ERR_ON_NULL(val, "null pointer");
     SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
 
-    if (sv.data[0] == '+' || sv.data[0] == '-') {
+    size_t i = 0;
+    if (sv.data[i] == '+' || sv.data[i] == '-') {
+        i++;
         SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
     }
 
@@ -311,7 +317,7 @@ int sv_to_i64(strview_t sv, int64_t *val)
     
     uint64_t res = 0, digit;
 
-    for (size_t i = 1; i < sv.len; i++) {
+    for ( ; i < sv.len; i++) {
         SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
         /* *
          * Convert an ASCII digit character into its integer digit value.
@@ -339,12 +345,15 @@ int sv_to_u32(strview_t sv, uint32_t *val)
     SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
     SV_RET_ERR_ON_TRUE(sv.data[0] == '-', "invalid symbol for u32");
 
-    if (sv.data[0] == '+')
+    size_t i = 0;
+    if (sv.data[i] == '+') {
+        i++;
         SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
+    }
     
     uint64_t res = 0, digit;
 
-    for (size_t i = 1; i < sv.len; i++) {
+    for ( ; i < sv.len; i++) {
         SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
         /* *
          * Convert an ASCII digit character into its integer digit value.
@@ -365,7 +374,9 @@ int sv_to_i32(strview_t sv, int32_t *val)
     SV_RET_ERR_ON_NULL(val, "null pointer");
     SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
 
-    if (sv.data[0] == '+' || sv.data[0] == '-') {
+    size_t i = 0;
+    if (sv.data[i] == '+' || sv.data[i] == '-') {
+        i++;
         SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid number as string");
     }
 
@@ -381,7 +392,7 @@ int sv_to_i32(strview_t sv, int32_t *val)
     
     uint32_t res = 0, digit;
 
-    for (size_t i = 1; i < sv.len; i++) {
+    for ( ; i < sv.len; i++) {
         SV_RET_ERR_ON_TRUE((sv.data[i] < '0' || sv.data[i] > '9'), "invalid range");
         /* *
          * Convert an ASCII digit character into its integer digit value.
@@ -406,11 +417,13 @@ static int is_float_point(strview_t sv)
 {
     SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
 
-    if (sv.data[0] == '+' || sv.data[0] == '-') {
+    size_t i = 0;
+    if (sv.data[i] == '+' || sv.data[i] == '-') {
+        i++;
         SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid float point number as string");
     }
 
-    for (size_t i = 1; i < sv.len; i++) {
+    for ( ; i < sv.len; i++) {
         char c = sv.data[i];
         if (c >= '0' && c <= '9')
             continue;
@@ -477,6 +490,36 @@ int sv_to_float(strview_t sv, float *val)
     }
     free(buf);
     *val = res;
+
+    return 0;
+}
+
+int sv_to_int(strview_t sv, int *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+
+    /* int is commonly 4B, but not guaranteed */
+    int64_t tmp;
+    SV_RET_ERR_ON_TRUE(sv_to_i64(sv, &tmp) < 0, "invalid int as string");
+
+    SV_RET_ERR_ON_TRUE((tmp < INT_MIN || tmp > INT_MAX), "out of range");
+    *val = (int) tmp;
+
+    return 0;
+}
+
+int sv_to_long(strview_t sv, long *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+
+    /* long can be 4B or 8B on some systems, but at most 8B */
+    int64_t tmp;
+    SV_RET_ERR_ON_TRUE(sv_to_i64(sv, &tmp) < 0, "invalid int as string");
+
+    SV_RET_ERR_ON_TRUE((tmp < LONG_MIN || tmp > LONG_MAX), "out of range");
+    *val = (long) tmp;
 
     return 0;
 }
