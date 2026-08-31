@@ -150,5 +150,21 @@ int main()
     sv_to_i32(sv18, &n32);
     printf("string to i32: %d\n", n32);
 
+    printf("\n");
+    strview_t sv19 = sv_from_cstr("+23.9876");
+    strview_t sv20 = sv_from_cstr("-989.23");
+    strview_t sv21 = sv_from_cstr("32e-3");
+    strview_t sv22 = sv_from_cstr("-89.1e+4");
+    double nd, nde;
+    float nf, nfe;
+    sv_to_double(sv19, &nd);
+    sv_to_float(sv20, &nf);
+    sv_to_double(sv21, &nde);
+    sv_to_float(sv22, &nfe);
+    printf("string to double: %lf\n", nd);
+    printf("string to float: %f\n", nf);
+    printf("string to double (e): %e\n", nde);
+    printf("string to float (e): %e\n", nfe);
+
     return 0;
 }
