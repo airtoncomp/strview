@@ -67,6 +67,8 @@ int sv_to_u64(strview_t sv, uint64_t *val);
 int sv_to_i64(strview_t sv, int64_t *val);
 int sv_to_u32(strview_t sv, uint32_t *val);
 int sv_to_i32(strview_t sv, int32_t *val);
+int sv_to_double(strview_t sv, double *val);
+int sv_to_float(strview_t sv, float *val);
 
 void sv_print_safe_stdout(strview_t sv);
 void sv_println_safe_stdout(strview_t sv);

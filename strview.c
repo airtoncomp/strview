@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <errno.h>
 
 #include "strview.h"
 
@@ -397,6 +398,85 @@ int sv_to_i32(strview_t sv, int32_t *val)
     } else {
         *val = (int32_t) res;
     }
+
+    return 0;
+}
+
+static int is_float_point(strview_t sv)
+{
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+
+    if (sv.data[0] == '+' || sv.data[0] == '-') {
+        SV_RET_ERR_ON_TRUE(sv.len <= 1, "invalid float point number as string");
+    }
+
+    for (size_t i = 1; i < sv.len; i++) {
+        char c = sv.data[i];
+        if (c >= '0' && c <= '9')
+            continue;
+        if (c == '.')
+            continue;
+        if (c == 'e'|| c == 'E') {
+            if (i + 1 < sv.len) {
+                if (sv.data[i + 1] == '+' || sv.data[i + 1] == '-') {
+                    i++;
+                }
+            }
+            continue;
+        }
+        fprintf(stderr, "FAIL: invalid character for float point number\n");
+        return 0;
+    }
+
+    return 1;
+}
+
+int sv_to_double(strview_t sv, double *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(!is_float_point(sv), "invalid number as string");
+
+    char *buf = malloc(sv.len + 1);
+    SV_RET_ERR_ON_NULL(buf, "could not allocate temporary memory space");
+
+    memcpy(buf, sv.data, sv.len);
+    buf[sv.len] = '\0';
+
+    char *end = NULL;
+    double res = strtod(buf, &end);
+    if (errno == ERANGE || end != buf + sv.len) {
+        free(buf);
+        fprintf(stderr, "strtod() failed\n");
+        return -1;
+    }
+    free(buf);
+    *val = res;
+
+    return 0;
+}
+
+int sv_to_float(strview_t sv, float *val)
+{
+    SV_RET_ERR_ON_NULL(val, "null pointer");
+    SV_RET_ERR_ON_NULL(sv.data, "string view *data points to null");
+    SV_RET_ERR_ON_TRUE(!is_float_point(sv), "invalid number as string");
+
+    char *buf = malloc(sv.len + 1);
+    SV_RET_ERR_ON_NULL(buf, "could not allocate temporary memory space");
+
+    memcpy(buf, sv.data, sv.len);
+    buf[sv.len] = '\0';
+
+    char *end = NULL;
+    float res = strtof(buf, &end);
+    if (errno == ERANGE || end != buf + sv.len) {
+        free(buf);
+        fprintf(stderr, "strtof() failed\n");
+        return -1;
+    }
+    free(buf);
+    *val = res;
 
     return 0;
 }
