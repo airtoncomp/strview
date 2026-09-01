@@ -3,9 +3,12 @@
 #include <stdint.h>
 
 #include "strview.h"
+#include "strbuf.h"
 
-int main() 
+void test_strview()
 {
+    printf("--- BEGIN: TEST STRVIEW ---\n");
+
     strview_t sv = sv_from_cstr("test-string");
 
     printf("string: %s\n", sv.data);
@@ -19,7 +22,7 @@ int main()
     strview_t out;
     if (sv_substr(sv, 5, 3, &out) < 0) {
         fprintf(stderr, "sv_substr() failed\n");
-        return -1;
+        return;
     }
     printf("substring: %.*s, len: %zu\n", (int) out.len, out.data, out.len);
     sv_print_safe_stdout(out);
@@ -177,6 +180,30 @@ int main()
     sv_to_long(sv24, &l);
     printf("string to int: %d\n", i);
     printf("string to long: %ld\n", l);
+
+    printf("--- END: TEST STRVIEW ---\n");
+}
+
+void test_strbuf()
+{
+    printf("--- BEGIN: TEST STRBUF ---\n");
+
+    strbuf_t sb1;
+    sb_init(&sb1, 100);
+    sb_print_safe_stdout(&sb1);
+
+    strbuf_t sb2;
+    sb_init_str(&sb2, "test-strbuf", strlen("test-strbuf"));
+    //sb_print_safe_stdout(&sb2);
+    sb_println_safe_stdout(&sb2);
+
+    printf("--- END: TEST STRBUF ---\n");
+}
+
+int main() 
+{
+    //test_strview();
+    test_strbuf();
 
     return 0;
 }
