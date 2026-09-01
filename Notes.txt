@@ -1,0 +1,54 @@
+===============================================================================
+Versions
+===============================================================================
+
+* v0.1.0 - Initial release with couple of basic functions to deal with c string
+
+** strview_t sv_from_cstr(const char *s);
+** strview_t sv_from_cstr_len(const char *s, size_t len);
+** int sv_to_cstr(strview_t sv, char *buf, size_t buflen);
+** size_t sv_len(strview_t sv);
+** int sv_empty(strview_t sv);
+** int sv_substr(strview_t sv, size_t pos, size_t len, strview_t *out);
+** int sv_prefix(strview_t sv, size_t end_pos, strview_t *out);
+** int sv_suffix(strview_t sv, size_t start_pos, strview_t *out);
+** int sv_rem_prefix(strview_t *sv, size_t end_pos);
+** int sv_rem_suffix(strview_t *sv, size_t start_pos);
+** int sv_rem_prefix_save(strview_t *sv, size_t end_pos, strview_t *save);
+** int sv_rem_suffix_save(strview_t *sv, size_t start_pos, strview_t *save);
+** int sv_cmp(strview_t a, strview_t b);
+** int sv_find_char(strview_t sv, char c, size_t *pos);
+** int sv_rfind_char(strview_t sv, char c, size_t *pos);
+** int sv_find_cstr(strview_t sv, const char *str, size_t *pos);
+** int sv_starts_with(strview_t sv, strview_t prefix);
+** int sv_ends_with(strview_t sv, strview_t suffix);
+** int sv_contains(strview_t sv, strview_t needle);
+** int sv_trim(strview_t sv, char *buf, size_t buflen);
+** int sv_to_u64(strview_t sv, uint64_t *val);
+** int sv_to_i64(strview_t sv, int64_t *val);
+** int sv_to_u32(strview_t sv, uint32_t *val);
+** int sv_to_i32(strview_t sv, int32_t *val);
+** int sv_to_double(strview_t sv, double *val);
+** int sv_to_float(strview_t sv, float *val);
+** int sv_to_int(strview_t sv, int *val);
+** int sv_to_long(strview_t sv, long *val);
+** void sv_print_safe_stdout(strview_t sv);
+** void sv_println_safe_stdout(strview_t sv);
+
+===============================================================================
+About strview
+===============================================================================
+
+* `strview_t` does not own the underlying memory. It provides read-only
+operations such as searching, comparing, extracting substrings, and checking
+prefixes and suffixes.
+
+* Prefix and suffix removal operations do not modify the original string. They
+only adjust the internal pointer and length so that the view references a
+different region of the same memory.
+
+* Trimming removes leading and trailing whitespace from the view. In most cases,
+this can be done by adjusting the pointer and length without allocating
+memory. If a function creates a separate trimmed copy, that operation requires
+memory allocation.
+
